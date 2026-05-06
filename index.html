@@ -39,6 +39,7 @@
             top: 0;
             z-index: 1000;
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease-in-out; /* Smooth hiding for header */
         }
 
         /* 1. Force left section to take up equal space */
@@ -378,6 +379,12 @@
 
         @media (max-width: 768px) {
             header { flex-direction: column; gap: 15px; padding: 15px; }
+            
+            /* Class to hide main header when scrolling down */
+            header.hide-header {
+                transform: translateY(-100%);
+            }
+            
             .logo, .nav-links, .user-actions { flex: unset; width: 100%; justify-content: center; }
             .nav-links { gap: 15px; flex-wrap: wrap; }
             .nav-links a { font-size: 0.9rem; }
@@ -865,23 +872,27 @@
         // --- 9. MOBILE SMART SCROLL NAV ---
         let lastScrollTop = 0;
         const productNav = document.querySelector('.glass-nav');
+        const mainHeader = document.querySelector('header');
 
         window.addEventListener('scroll', () => {
             // Only run this logic on mobile screens (768px or smaller)
             if (window.innerWidth <= 768) {
                 let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
                 
-                if (scrollTop > lastScrollTop && scrollTop > 200) {
-                    // Scrolling Down (and past the hero section) -> Hide Nav
+                // If scrolling down AND past the top 100px of the page
+                if (scrollTop > lastScrollTop && scrollTop > 100) {
                     productNav.classList.add('hide-nav');
+                    mainHeader.classList.add('hide-header');
                 } else {
-                    // Scrolling Up -> Show Nav
+                    // Scrolling Up -> Show Navs
                     productNav.classList.remove('hide-nav');
+                    mainHeader.classList.remove('hide-header');
                 }
                 lastScrollTop = scrollTop;
             } else {
-                // Ensure it's always visible on desktop if window is resized
+                // Ensure they are always visible on desktop if window is resized
                 productNav.classList.remove('hide-nav');
+                mainHeader.classList.remove('hide-header');
             }
         });
     </script>
