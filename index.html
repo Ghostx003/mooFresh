@@ -170,11 +170,104 @@
         .cat-card img { width: 100%; height: 200px; object-fit: contain; border-radius: 15px; margin-bottom: 15px; background: white; }
         .cat-card h3 { color: var(--primary); font-size: 1.5rem; }
         
-        /* Placeholder Sections */
-        .placeholder-section { padding: 80px 5%; max-width: 1200px; margin: 0 auto; text-align: center; border-radius: 20px; }
-        .placeholder-section.gray-bg { background-color: #E2E8F0; margin-top: 40px;}
-        .placeholder-section h2 { color: var(--primary); font-size: 2.5rem; margin-bottom: 20px; font-family: 'Poppins';}
-        .placeholder-section p { color: var(--text-gray); font-size: 1.1rem;}
+        /* === WHY US SECTION === */
+        .why-us-section { 
+            padding: 40px 5%; 
+            max-width: 1200px; 
+            margin: 20px auto; 
+            text-align: center; 
+        }
+        .why-us-img {
+            width: 100%;
+            max-width: 1000px;
+            height: auto;
+            border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+            display: block;
+            margin: 0 auto;
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+        .why-us-img:hover { transform: scale(1.02); }
+
+        /* === FEEDBACK CAROUSEL SECTION === */
+        .feedback-section { 
+            padding: 80px 5%; 
+            background-color: #F8FAFC;
+            text-align: center; 
+            position: relative;
+            border-top: 1px solid #E2E8F0;
+        }
+        .feedback-section h2 { color: var(--primary); font-size: 2.5rem; margin-bottom: 40px; font-family: 'Poppins'; }
+        
+        .carousel-container {
+            max-width: 900px;
+            margin: 0 auto;
+            overflow: hidden; /* Hides the slides outside the view */
+            position: relative;
+        }
+        .carousel-track {
+            display: flex;
+            transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+        .carousel-slide {
+            min-width: 100%;
+            padding: 20px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .review-text {
+            font-size: 1.3rem;
+            color: #718096; /* Matching the soft gray from your image */
+            line-height: 1.7;
+            font-weight: 400;
+            margin-bottom: 30px;
+            max-width: 800px;
+        }
+        .reviewer-info {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+        .reviewer-img {
+            width: 75px;
+            height: 75px;
+            border-radius: 50%;
+            object-fit: cover;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border: 3px solid white;
+        }
+        .reviewer-name {
+            font-weight: 800;
+            color: #1A202C; /* Very dark gray/black for the name */
+            font-size: 1.2rem;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        /* Carousel Navigation Dots */
+        .carousel-dots {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 30px;
+        }
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #CBD5E1;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .dot.active {
+            background: var(--accent);
+            width: 30px;
+            border-radius: 10px;
+        }
 
         /* === SEPARATE PRODUCTS PAGE VIEW === */
         .glass-nav {
@@ -261,7 +354,7 @@
         .btn-pay:hover { background: var(--secondary); }
 
         /* === FOOTER === */
-        footer { background: #0F172A; color: white; padding: 60px 5% 20px; margin-top: 50px; }
+        footer { background: #0F172A; color: white; padding: 60px 5% 20px; margin-top: 0; }
         .footer-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; max-width: 1200px; margin: 0 auto; }
         .footer-info h3 { color: var(--accent); font-family: 'Poppins'; font-size: 1.5rem; margin-bottom: 15px; }
         .footer-info p { color: #94A3B8; margin-bottom: 10px; line-height: 1.6; }
@@ -279,6 +372,7 @@
         @media (max-width: 900px) {
             .hero h1 { font-size: 3rem; }
             .footer-grid { grid-template-columns: 1fr; text-align: center; }
+            .review-text { font-size: 1.1rem; }
         }
 
         @media (max-width: 768px) {
@@ -294,11 +388,13 @@
             .glass-nav { top: 180px; padding: 10px; gap: 10px; justify-content: center; }
             .glass-nav button { padding: 8px 15px; font-size: 0.85rem; flex-grow: 1; text-align: center;}
             
-            .category-showcase h2, .page-title { font-size: 2rem; }
+            .category-showcase h2, .page-title, .feedback-section h2 { font-size: 2rem; }
             .cat-grid, .product-grid { grid-template-columns: repeat(auto-fit, minmax(100%, 1fr)); }
             
             .wallet-modal { padding: 20px; }
             .wallet-bal { font-size: 2rem; }
+            
+            .review-text { font-size: 1rem; }
         }
 
         @media (max-width: 480px) {
@@ -374,16 +470,63 @@
             </div>
         </section>
 
-        <!-- Why Us Placeholder Section -->
-        <section id="why-us" class="placeholder-section gray-bg">
-            <h2>Why Choose Moo Fresh?</h2>
-            <p>This is a placeholder for your 'Why Us' content. We will add the text and details here later!</p>
+        <!-- Why Us Section -->
+        <section id="why-us" class="why-us-section">
+            <img src="whyus.png" alt="Why Choose Moo Fresh" class="why-us-img" onerror="this.src='https://placehold.co/1000x600/F1F5F9/1E3A8A?text=Why+Choose+Moo+Fresh'">
         </section>
 
-        <!-- Feedback Placeholder Section -->
-        <section id="feedback" class="placeholder-section">
-            <h2>Customer Feedback</h2>
-            <p>This is a placeholder for your 'Feedback' section. We can add reviews, testimonials, or a feedback form here later.</p>
+        <!-- UPDATED: Feedback Carousel Section -->
+        <section id="feedback" class="feedback-section">
+            <h2>What Our Family Says</h2>
+            <div class="carousel-container">
+                <div class="carousel-track" id="testimonial-track">
+                    
+                    <!-- Slide 1: Srikant -->
+                    <div class="carousel-slide">
+                        <p class="review-text">I am very very Happy with the quality of the milk and the packaging.. If you love paneer, you must try the paneer. Its yummy. The delivery is also very prompt and they dont charge anything extra. I highly recommend this brand.</p>
+                        <div class="reviewer-info">
+                            <img src="https://i.pravatar.cc/150?img=11" alt="Srikant Nayak" class="reviewer-img">
+                            <span class="reviewer-name">Srikant Nayak</span>
+                        </div>
+                    </div>
+
+                    <!-- Slide 2: Subit -->
+                    <div class="carousel-slide">
+                        <p class="review-text">The purest ghee I have tasted since my childhood in the village. The aroma itself tells you it's unadulterated. Fantastic contactless service every morning right at my doorstep!</p>
+                        <div class="reviewer-info">
+                            <img src="https://i.pravatar.cc/150?img=12" alt="Subit" class="reviewer-img">
+                            <span class="reviewer-name">Subit</span>
+                        </div>
+                    </div>
+
+                    <!-- Slide 3: Nishant -->
+                    <div class="carousel-slide">
+                        <p class="review-text">Daily Moo Kool is my kids' absolute favorite. As a parent, I love that it has no added preservatives. It's a highly trustworthy dairy brand that genuinely cares about family health.</p>
+                        <div class="reviewer-info">
+                            <img src="https://i.pravatar.cc/150?img=13" alt="Nishant" class="reviewer-img">
+                            <span class="reviewer-name">Nishant</span>
+                        </div>
+                    </div>
+
+                    <!-- Slide 4: Priti -->
+                    <div class="carousel-slide">
+                        <p class="review-text">The Dahi sets perfectly and tastes exactly like it was made at home. It's incredibly thick, creamy, and completely fresh. I am so glad I made the switch to Moo Fresh!</p>
+                        <div class="reviewer-info">
+                            <img src="https://i.pravatar.cc/150?img=5" alt="Priti" class="reviewer-img">
+                            <span class="reviewer-name">Priti</span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            
+            <!-- Dots Navigation -->
+            <div class="carousel-dots">
+                <div class="dot active" onclick="goToSlide(0)"></div>
+                <div class="dot" onclick="goToSlide(1)"></div>
+                <div class="dot" onclick="goToSlide(2)"></div>
+                <div class="dot" onclick="goToSlide(3)"></div>
+            </div>
         </section>
     </div>
 
@@ -651,6 +794,49 @@
             document.getElementById('wallet-modal').style.display = 'none';
             document.getElementById('cart-sidebar').classList.remove('open');
         }
+
+        // --- 8. FEEDBACK CAROUSEL LOGIC ---
+        let currentSlide = 0;
+        const totalSlides = 4;
+        let slideInterval;
+
+        function moveSlide(index) {
+            const track = document.getElementById('testimonial-track');
+            const dots = document.querySelectorAll('.dot');
+            
+            if(index >= totalSlides) currentSlide = 0;
+            else if(index < 0) currentSlide = totalSlides - 1;
+            else currentSlide = index;
+
+            // Shift the track left by 100% per slide
+            track.style.transform = `translateX(-${currentSlide * 100}%)`;
+            
+            // Update dots
+            dots.forEach(dot => dot.classList.remove('active'));
+            if(dots[currentSlide]) dots[currentSlide].classList.add('active');
+        }
+
+        function nextSlide() {
+            moveSlide(currentSlide + 1);
+        }
+
+        function startAutoScroll() {
+            // Scroll every 5 seconds (5000ms)
+            slideInterval = setInterval(nextSlide, 5000);
+        }
+
+        function resetAutoScroll() {
+            clearInterval(slideInterval);
+            startAutoScroll();
+        }
+
+        function goToSlide(index) {
+            moveSlide(index);
+            resetAutoScroll(); // Reset timer if user manually clicks a dot
+        }
+
+        // Initialize carousel on page load
+        startAutoScroll();
     </script>
 </body>
 </html>
