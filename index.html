@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moo Fresh | Pure Dairy</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;800&family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <!-- Main Navigation -->
+    <header class="main-header">
+        <div class="logo">
+            <img src="logo.png" alt="Logo" onerror="this.src='https://placehold.co/100x40/2c5282/ffffff?text=Logo'">
+        </div>
+        <nav class="main-nav">
+            <a href="#">OUR STORY</a>
+            <a href="#products">PRODUCTS</a>
+            <a href="#">RECIPES</a>
+            <a href="#">LOCATIONS</a>
+            <a href="#">SHOP</a>
+        </nav>
+        <div class="user-actions">
+            <div class="wallet-btn" onclick="toggleWallet()">
+                <span id="wallet-display">₹0</span>
+                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 14H4V6h16v12zm-8-7c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"></path></svg>
+            </div>
+            <div class="cart-btn" onclick="toggleCart()">
+                <span id="cart-badge">0</span>
+                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <img src="bg.png" alt="Moo Fresh Banner" class="hero-bg" onerror="this.style.display='none'">
+        <!-- Fallback content if bg.png doesn't load immediately -->
+        <div class="hero-content">
+            <h1>Moo Fresh</h1>
+            <h2 class="subtitle">PURELY DELICIOUS</h2>
+            <p>PASTEURISED HOMOGENISED TONED MILK</p>
+            <button onclick="document.getElementById('products').scrollIntoView({behavior: 'smooth'})">EXPLORE OUR RANGE</button>
+        </div>
+    </section>
+
+    <!-- Glassy Mini Top Nav -->
+    <div class="glass-nav-container">
+        <nav class="glass-nav">
+            <a href="#milk-cat">Milk</a>
+            <a href="#paneer-cat">Paneer</a>
+            <a href="#dahi-cat">Dahi</a>
+            <a href="#ghee-cat">Ghee</a>
+        </nav>
+    </div>
+
+    <!-- Products Section -->
+    <main id="products" class="container">
+        
+        <!-- MILK CATEGORY -->
+        <h2 id="milk-cat" class="category-title">Fresh Milk</h2>
+        <div class="product-grid">
+            <div class="product-card">
+                <h3>Toned Milk</h3>
+                <p class="desc">Daily essential fresh milk</p>
+                <div class="action-row">
+                    <select id="qty-toned">
+                        <option value="500ml">500ml - ₹28</option>
+                        <option value="1L">1L - ₹54</option>
+                    </select>
+                    <button class="add-btn" onclick="addToCart('Toned Milk', 'qty-toned')">+</button>
+                </div>
+            </div>
+
+            <div class="product-card">
+                <div class="tag">27% Whey Added</div>
+                <h3>Protein Milk</h3>
+                <p class="desc">For your daily fitness goals</p>
+                <div class="action-row">
+                    <select id="qty-protein">
+                        <option value="500ml">500ml - ₹40</option>
+                        <option value="1L">1L - ₹75</option>
+                    </select>
+                    <button class="add-btn" onclick="addToCart('Protein Milk', 'qty-protein')">+</button>
+                </div>
+            </div>
+
+            <div class="product-card">
+                <div class="tag gold">Premium</div>
+                <h3>Tanisha White Gold Milk</h3>
+                <p class="desc">Rich, creamy, and luxurious</p>
+                <div class="action-row">
+                    <select id="qty-tanisha">
+                        <option value="500ml">500ml - ₹45</option>
+                        <option value="1L">1L - ₹85</option>
+                    </select>
+                    <button class="add-btn" onclick="addToCart('Tanisha White Gold', 'qty-tanisha')">+</button>
+                </div>
+            </div>
+
+            <div class="product-card">
+                <div class="tag sweet">No Sugar</div>
+                <h3>Moo Kool</h3>
+                <p class="desc">Sweet milk for kids & adults</p>
+                <div class="action-row">
+                    <select id="qty-mookool">
+                        <option value="200ml">200ml - ₹25</option>
+                    </select>
+                    <button class="add-btn" onclick="addToCart('Moo Kool', 'qty-mookool')">+</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- PANEER CATEGORY -->
+        <h2 id="paneer-cat" class="category-title">Soft Paneer</h2>
+        <div class="product-grid">
+            <div class="product-card">
+                <h3>Farm Fresh Moo Paneer</h3>
+                <p class="desc">Soft, rich, and melts in mouth</p>
+                <div class="action-row">
+                    <select id="qty-paneer">
+                        <option value="250g">250g - ₹90</option>
+                        <option value="500g">500g - ₹175</option>
+                    </select>
+                    <button class="add-btn" onclick="addToCart('Farm Fresh Moo Paneer', 'qty-paneer')">+</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- DAHI & GHEE CATEGORY -->
+        <h2 id="dahi-cat" class="category-title">Dahi & Ghee</h2>
+        <div class="product-grid">
+            <div class="product-card">
+                <h3>Moo Dahi</h3>
+                <p class="desc">Thick, creamy, set perfectly</p>
+                <div class="action-row">
+                    <select id="qty-dahi">
+                        <option value="200g">200g - ₹30</option>
+                        <option value="400g">400g - ₹55</option>
+                    </select>
+                    <button class="add-btn" onclick="addToCart('Moo Dahi', 'qty-dahi')">+</button>
+                </div>
+            </div>
+            
+            <div id="ghee-cat" class="product-card">
+                <h3>Pure Cow Ghee</h3>
+                <p class="desc">Aromatic traditional ghee</p>
+                <div class="action-row">
+                    <select id="qty-ghee">
+                        <option value="500ml">500ml - ₹350</option>
+                        <option value="1L">1L - ₹680</option>
+                    </select>
+                    <button class="add-btn" onclick="addToCart('Pure Cow Ghee', 'qty-ghee')">+</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Wallet Modal -->
+    <div class="overlay" id="wallet-overlay" onclick="toggleWallet()"></div>
+    <div class="modal" id="wallet-modal">
+        <h3>Moo Wallet</h3>
+        <p class="wallet-bal">Balance: <span id="modal-wallet-display">₹0</span></p>
+        <p class="small-text">Add money instantly via UPI</p>
+        <div class="fund-buttons">
+            <button onclick="addFunds(100)">+ ₹100 (PhonePe/GPay)</button>
+            <button onclick="addFunds(500)">+ ₹500 (PhonePe/GPay)</button>
+            <button onclick="addFunds(1000)">+ ₹1000 (PhonePe/GPay)</button>
+        </div>
+        <button class="close-btn" onclick="toggleWallet()">Close</button>
+    </div>
+
+    <!-- Cart / Subscription Sidebar -->
+    <div class="overlay" id="cart-overlay" onclick="toggleCart()"></div>
+    <div class="sidebar" id="cart-sidebar">
+        <div class="sidebar-header">
+            <h2>Your Subscription</h2>
+            <button class="close-btn-icon" onclick="toggleCart()">×</button>
+        </div>
+        
+        <div class="cart-items" id="cart-items-container">
+            <!-- Items inject here -->
+            <p class="empty-cart">Your cart is empty.</p>
+        </div>
+
+        <div class="subscription-form">
+            <label>Delivery Frequency:</label>
+            <select id="sub-freq">
+                <option value="Everyday">Everyday</option>
+                <option value="Alternate Days">Alternate Days</option>
+                <option value="Weekends Only">Weekends Only</option>
+            </select>
+            
+            <label>Delivery Address:</label>
+            <textarea id="address" placeholder="Enter full address..."></textarea>
+        </div>
+
+        <div class="checkout-area">
+            <div class="total-row">
+                <span>Subtotal:</span>
+                <span id="cart-total">₹0</span>
+            </div>
+            <button class="checkout-btn" onclick="processOrder()">Subscribe & Pay</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
