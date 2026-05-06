@@ -4,207 +4,653 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Moo Fresh | Pure Dairy</title>
-    <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;800&family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;800&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* === CORE VARIABLES & SETUP === */
+        :root {
+            --primary: #1E3A8A;
+            --secondary: #3B82F6;
+            --accent: #10B981;
+            --bg-color: #F8FAFC;
+            --card-bg: #FFFFFF;
+            --text-dark: #0F172A;
+            --text-gray: #64748B;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Nunito', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        /* === NAVIGATION BAR === */
+        header {
+            background: white;
+            padding: 15px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+
+        /* 1. Force left section to take up equal space */
+        .logo { 
+            flex: 1; 
+            display: flex; 
+            justify-content: flex-start; 
+        }
+        .logo img { height: 45px; cursor: pointer; }
+
+        /* 2. Force middle section to be dead center */
+        .nav-links { 
+            flex: 2; 
+            display: flex; 
+            justify-content: center; 
+            gap: 30px; 
+        }
+        .nav-links a {
+            text-decoration: none;
+            color: var(--primary);
+            font-weight: 700;
+            font-family: 'Poppins', sans-serif;
+            cursor: pointer;
+            transition: color 0.3s;
+            position: relative;
+        }
+        
+        /* Menu Item Hover Effect */
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -4px;
+            left: 0;
+            background-color: var(--accent);
+            transition: width 0.3s ease;
+        }
+        .nav-links a:hover { color: var(--accent); }
+        .nav-links a:hover::after { width: 100%; }
+
+        /* 3. Force right section to take up equal space */
+        .user-actions { 
+            flex: 1; 
+            display: flex; 
+            justify-content: flex-end; 
+            gap: 10px; 
+            flex-wrap: wrap; 
+            align-items: center;
+        }
+        
+        .btn-pill {
+            background: #F1F5F9;
+            padding: 8px 15px;
+            border-radius: 50px;
+            font-weight: 700;
+            color: var(--primary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: 0.2s;
+            border: 1px solid #E2E8F0;
+            font-size: 0.9rem;
+        }
+        .btn-pill:hover { background: #E2E8F0; }
+        .btn-cart { background: var(--accent); color: white; border: none; }
+        .btn-cart:hover { background: #059669; transform: scale(1.05); }
+        .btn-auth { background: transparent; border: 1px solid var(--primary); }
+        .btn-auth:hover { background: var(--primary); color: white; }
+        .btn-auth.solid { background: var(--primary); color: white; }
+        .btn-auth.solid:hover { background: var(--secondary); border-color: var(--secondary); }
+
+        /* === SPA PAGE ROUTING === */
+        .page-view {
+            display: none;
+            animation: fadeIn 0.4s ease-in-out;
+            min-height: 80vh;
+        }
+        .page-view.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* === HOME PAGE VIEW === */
+        .hero {
+            height: 70vh;
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        .hero::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(rgba(255,255,255,0.7), rgba(255,255,255,0.9));
+        }
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            padding: 40px;
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(10px);
+            border-radius: 30px;
+            border: 1px solid rgba(255,255,255,0.8);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.05);
+            width: 90%;
+            max-width: 500px;
+        }
+        .hero h1 { font-family: 'Poppins', sans-serif; font-size: 4rem; color: var(--primary); line-height: 1; }
+        .hero .subtitle { color: var(--accent); font-weight: 800; letter-spacing: 2px; margin: 10px 0 20px; }
+        .hero button {
+            padding: 15px 35px; background: var(--primary); color: white; border: none;
+            border-radius: 50px; font-weight: bold; font-size: 1.1rem; cursor: pointer; transition: 0.3s;
+            width: 100%; max-width: 250px;
+        }
+        .hero button:hover { background: var(--secondary); box-shadow: 0 10px 20px rgba(59, 130, 246, 0.3); }
+
+        .category-showcase { padding: 60px 5%; max-width: 1200px; margin: 0 auto; text-align: center;}
+        .category-showcase h2 { color: var(--primary); font-size: 2.5rem; margin-bottom: 40px; font-family: 'Poppins';}
+        .cat-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 30px;
+        }
+        .cat-card {
+            background: white; border-radius: 20px; padding: 20px; cursor: pointer;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05); transition: 0.3s; border: 2px solid transparent;
+        }
+        .cat-card:hover { transform: translateY(-10px); border-color: var(--secondary); }
+        .cat-card img { width: 100%; height: 200px; object-fit: contain; border-radius: 15px; margin-bottom: 15px; background: white; }
+        .cat-card h3 { color: var(--primary); font-size: 1.5rem; }
+        
+        /* Placeholder Sections */
+        .placeholder-section { padding: 80px 5%; max-width: 1200px; margin: 0 auto; text-align: center; border-radius: 20px; }
+        .placeholder-section.gray-bg { background-color: #E2E8F0; margin-top: 40px;}
+        .placeholder-section h2 { color: var(--primary); font-size: 2.5rem; margin-bottom: 20px; font-family: 'Poppins';}
+        .placeholder-section p { color: var(--text-gray); font-size: 1.1rem;}
+
+        /* === SEPARATE PRODUCTS PAGE VIEW === */
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(15px);
+            padding: 15px 5%; display: flex; justify-content: center; gap: 15px; flex-wrap: wrap;
+            position: sticky; top: 70px; z-index: 99; border-bottom: 1px solid #E2E8F0;
+        }
+        .glass-nav button {
+            background: #F1F5F9; border: none; font-weight: 700; color: var(--text-gray);
+            font-size: 0.9rem; cursor: pointer; padding: 8px 20px; border-radius: 50px; transition: 0.3s;
+        }
+        .glass-nav button.active { background: var(--primary); color: white; }
+
+        .products-container { padding: 40px 5%; max-width: 1200px; margin: 0 auto; }
+        .page-title { color: var(--primary); font-size: 2rem; margin-bottom: 30px; border-bottom: 3px solid var(--accent); display: inline-block; padding-bottom: 5px;}
+        
+        .product-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 25px; }
+        
+        /* Product Cards & Hover Effect */
+        .product-card {
+            background: var(--card-bg); padding: 20px; border-radius: 20px; position: relative;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.04); display: flex; flex-direction: column; border: 1px solid #F1F5F9;
+            transition: all 0.3s ease;
+        }
+        
+        .product-card:hover {
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+            border-radius: 40px; 
+            transform: translateY(-8px); 
+            border-color: #E2E8F0;
+        }
+
+        .product-card .tag {
+            position: absolute; top: -12px; left: 20px; background: var(--accent); color: white;
+            padding: 5px 15px; border-radius: 50px; font-weight: 800; font-size: 0.75rem; z-index: 2;
+        }
+        .product-card img { width: 100%; height: 200px; object-fit: contain; border-radius: 15px; margin-bottom: 15px; background: white; transition: 0.3s;}
+        .product-card h3 { color: var(--primary); margin-bottom: 8px; font-size: 1.3rem;}
+        .product-card .desc { color: var(--text-gray); font-size: 0.9rem; margin-bottom: 20px; flex-grow: 1; }
+        
+        .action-row {
+            display: flex; gap: 10px; background: #F8FAFC; padding: 8px; border-radius: 50px; border: 1px solid #E2E8F0;
+        }
+        .action-row select {
+            flex-grow: 1; border: none; background: transparent; padding: 5px 10px;
+            font-weight: 700; color: var(--text-dark); outline: none; cursor: pointer;
+            font-size: 0.85rem;
+        }
+        .add-btn {
+            width: 40px; height: 40px; border-radius: 50%; background: var(--primary); flex-shrink: 0;
+            color: white; border: none; font-size: 1.5rem; cursor: pointer; display: flex;
+            align-items: center; justify-content: center; transition: 0.2s;
+        }
+        .add-btn:hover { background: var(--accent); transform: scale(1.1); }
+
+        /* === MODALS & SIDEBARS === */
+        .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 2000; backdrop-filter: blur(4px); }
+        
+        .wallet-modal {
+            display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            background: white; padding: 30px; border-radius: 20px; z-index: 2001; width: 90%; max-width: 380px; text-align: center;
+        }
+        .wallet-modal h2 { color: var(--primary); }
+        .wallet-bal { font-size: 2.5rem; font-weight: 800; color: var(--accent); margin: 15px 0; }
+        .fund-btn { width: 100%; padding: 15px; border-radius: 10px; border: 2px solid var(--primary); background: white; color: var(--primary); font-weight: 800; margin-bottom: 10px; cursor: pointer; transition: 0.2s; font-size: 1rem;}
+        .fund-btn:hover { background: var(--primary); color: white; }
+
+        .cart-sidebar {
+            position: fixed; top: 0; right: -100%; width: 100%; max-width: 400px; height: 100%;
+            background: white; z-index: 2001; transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1); display: flex; flex-direction: column;
+            box-shadow: -10px 0 30px rgba(0,0,0,0.1);
+        }
+        .cart-sidebar.open { right: 0; }
+        .cart-header { padding: 20px; border-bottom: 1px solid #E2E8F0; display: flex; justify-content: space-between; align-items: center;}
+        .cart-items { flex-grow: 1; padding: 20px; overflow-y: auto; }
+        .cart-item { display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 1px dashed #CBD5E1; }
+        
+        .checkout-section { padding: 20px; background: #F8FAFC; border-top: 1px solid #E2E8F0; }
+        .checkout-section label { font-weight: 700; color: var(--text-dark); font-size: 0.9rem; display: block; margin: 10px 0 5px;}
+        .checkout-section select, .checkout-section textarea { width: 100%; padding: 12px; border: 1px solid #CBD5E1; border-radius: 10px; font-family: 'Nunito'; margin-bottom: 10px; outline: none; font-size: 0.95rem;}
+        .checkout-section textarea { resize: none; height: 70px; }
+        .total-display { display: flex; justify-content: space-between; font-size: 1.4rem; font-weight: 800; color: var(--primary); margin: 15px 0; }
+        .btn-pay { width: 100%; padding: 18px; background: var(--primary); color: white; border: none; border-radius: 10px; font-size: 1.1rem; font-weight: 800; cursor: pointer; transition: 0.2s;}
+        .btn-pay:hover { background: var(--secondary); }
+
+        /* === FOOTER === */
+        footer { background: #0F172A; color: white; padding: 60px 5% 20px; margin-top: 50px; }
+        .footer-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; max-width: 1200px; margin: 0 auto; }
+        .footer-info h3 { color: var(--accent); font-family: 'Poppins'; font-size: 1.5rem; margin-bottom: 15px; }
+        .footer-info p { color: #94A3B8; margin-bottom: 10px; line-height: 1.6; }
+        .footer-bottom { text-align: center; margin-top: 50px; padding-top: 20px; border-top: 1px solid #1E293B; color: #64748B; font-size: 0.9rem; }
+
+        /* ========================================== */
+        /* 📱 MOBILE FRIENDLY MEDIA QUERIES (@media)  */
+        /* ========================================== */
+        @media (max-width: 1024px) {
+            .nav-links { gap: 15px; }
+            .user-actions { gap: 5px; }
+            .btn-pill { padding: 8px 10px; font-size: 0.8rem; }
+        }
+
+        @media (max-width: 900px) {
+            .hero h1 { font-size: 3rem; }
+            .footer-grid { grid-template-columns: 1fr; text-align: center; }
+        }
+
+        @media (max-width: 768px) {
+            header { flex-direction: column; gap: 15px; padding: 15px; }
+            .logo, .nav-links, .user-actions { flex: unset; width: 100%; justify-content: center; }
+            .nav-links { gap: 15px; flex-wrap: wrap; }
+            .nav-links a { font-size: 0.9rem; }
+            
+            .hero { height: auto; padding: 60px 5%; }
+            .hero h1 { font-size: 2.5rem; }
+            .hero-content { padding: 30px 20px; width: 100%; }
+            
+            .glass-nav { top: 180px; padding: 10px; gap: 10px; justify-content: center; }
+            .glass-nav button { padding: 8px 15px; font-size: 0.85rem; flex-grow: 1; text-align: center;}
+            
+            .category-showcase h2, .page-title { font-size: 2rem; }
+            .cat-grid, .product-grid { grid-template-columns: repeat(auto-fit, minmax(100%, 1fr)); }
+            
+            .wallet-modal { padding: 20px; }
+            .wallet-bal { font-size: 2rem; }
+        }
+
+        @media (max-width: 480px) {
+            .hero h1 { font-size: 2rem; }
+            .hero .subtitle { font-size: 0.9rem; }
+            .user-actions { width: 100%; justify-content: center; gap: 10px; }
+            .btn-pill { flex-grow: 1; justify-content: center; }
+            
+            .cart-sidebar { max-width: 100%; }
+        }
+    </style>
 </head>
 <body>
 
-    <!-- Main Navigation -->
-    <header class="main-header">
-        <div class="logo">
-            <img src="logo.png" alt="Logo" onerror="this.src='https://placehold.co/100x40/2c5282/ffffff?text=Logo'">
+    <!-- PERSISTENT HEADER -->
+    <header>
+        <div class="logo" onclick="navigateTo('home')">
+            <img src="logo.png" alt="Moo Fresh Logo" onerror="this.src='https://placehold.co/120x40/1E3A8A/ffffff?text=Moo+Fresh'">
         </div>
-        <nav class="main-nav">
-            <a href="#">OUR STORY</a>
-            <a href="#products">PRODUCTS</a>
-            <a href="#">RECIPES</a>
-            <a href="#">LOCATIONS</a>
-            <a href="#">SHOP</a>
+        <nav class="nav-links">
+            <a onclick="navigateTo('home')">HOME</a>
+            <a onclick="navigateTo('products', 'all')">PRODUCTS</a>
+            <a onclick="scrollToSection('why-us')">WHY US</a>
+            <a onclick="scrollToSection('feedback')">FEEDBACK</a>
+            <a onclick="scrollToSection('footer-loc')">LOCATION</a>
         </nav>
         <div class="user-actions">
-            <div class="wallet-btn" onclick="toggleWallet()">
-                <span id="wallet-display">₹0</span>
-                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 14H4V6h16v12zm-8-7c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"></path></svg>
+            <!-- Auth Features -->
+            <div class="btn-pill btn-auth" onclick="alert('Sign In feature coming soon!')">Sign In</div>
+            <div class="btn-pill btn-auth solid" onclick="alert('Sign Up feature coming soon!')">Sign Up</div>
+            
+            <div class="btn-pill" onclick="toggleWallet()">
+                <span>💳</span> <span id="wallet-btn-txt">₹0</span>
             </div>
-            <div class="cart-btn" onclick="toggleCart()">
-                <span id="cart-badge">0</span>
-                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+            <div class="btn-pill btn-cart" onclick="toggleCart()">
+                <span>🛒</span> <span id="cart-badge">0</span>
             </div>
         </div>
     </header>
 
-    <!-- Hero Section -->
-    <section class="hero">
-        <img src="bg.png" alt="Moo Fresh Banner" class="hero-bg" onerror="this.style.display='none'">
-        <!-- Fallback content if bg.png doesn't load immediately -->
-        <div class="hero-content">
-            <h1>Moo Fresh</h1>
-            <h2 class="subtitle">PURELY DELICIOUS</h2>
-            <p>PASTEURISED HOMOGENISED TONED MILK</p>
-            <button onclick="document.getElementById('products').scrollIntoView({behavior: 'smooth'})">EXPLORE OUR RANGE</button>
-        </div>
-    </section>
+    <!-- ========================================== -->
+    <!-- VIEW 1: HOME PAGE                          -->
+    <!-- ========================================== -->
+    <div id="view-home" class="page-view active">
+        <section class="hero" style="background-image: url('bg.png');">
+            <div class="hero-content">
+                <h1>Moo Fresh</h1>
+                <p class="subtitle">PURELY DELICIOUS DAIRY</p>
+                <p style="color:var(--text-gray); margin-bottom:20px; font-size: 0.95rem;">Nayak Family's Promise of Purity since 2026</p>
+                <button onclick="navigateTo('products', 'all')">Shop the Farm</button>
+            </div>
+        </section>
 
-    <!-- Glassy Mini Top Nav -->
-    <div class="glass-nav-container">
-        <nav class="glass-nav">
-            <a href="#milk-cat">Milk</a>
-            <a href="#paneer-cat">Paneer</a>
-            <a href="#dahi-cat">Dahi</a>
-            <a href="#ghee-cat">Ghee</a>
-        </nav>
+        <section class="category-showcase">
+            <h2>Our Pure Categories</h2>
+            <div class="cat-grid">
+                <div class="cat-card" onclick="navigateTo('products', 'milk')">
+                    <img src="milk.png" alt="Milk" onerror="this.src='https://placehold.co/400x300/F1F5F9/1E3A8A?text=Fresh+Milk'">
+                    <h3>Fresh Milk</h3>
+                </div>
+                <div class="cat-card" onclick="navigateTo('products', 'paneer')">
+                    <img src="panner.png" alt="Paneer" onerror="this.src='https://placehold.co/400x300/F1F5F9/1E3A8A?text=Moo+Paneer'">
+                    <h3>Moo Paneer</h3>
+                </div>
+                <div class="cat-card" onclick="navigateTo('products', 'dahi')">
+                    <img src="dahi.png" alt="Dahi" onerror="this.src='https://placehold.co/400x300/F1F5F9/1E3A8A?text=Moo+Dahi'">
+                    <h3>Moo Dahi</h3>
+                </div>
+                <div class="cat-card" onclick="navigateTo('products', 'ghee')">
+                    <img src="dahi.png" alt="Ghee" onerror="this.src='https://placehold.co/400x300/F1F5F9/1E3A8A?text=Pure+Ghee'">
+                    <h3>Pure Ghee</h3>
+                </div>
+            </div>
+        </section>
+
+        <!-- Why Us Placeholder Section -->
+        <section id="why-us" class="placeholder-section gray-bg">
+            <h2>Why Choose Moo Fresh?</h2>
+            <p>This is a placeholder for your 'Why Us' content. We will add the text and details here later!</p>
+        </section>
+
+        <!-- Feedback Placeholder Section -->
+        <section id="feedback" class="placeholder-section">
+            <h2>Customer Feedback</h2>
+            <p>This is a placeholder for your 'Feedback' section. We can add reviews, testimonials, or a feedback form here later.</p>
+        </section>
     </div>
 
-    <!-- Products Section -->
-    <main id="products" class="container">
+    <!-- ========================================== -->
+    <!-- VIEW 2: SEPARATE PRODUCTS PAGE             -->
+    <!-- ========================================== -->
+    <div id="view-products" class="page-view">
         
-        <!-- MILK CATEGORY -->
-        <h2 id="milk-cat" class="category-title">Fresh Milk</h2>
-        <div class="product-grid">
-            <div class="product-card">
-                <h3>Toned Milk</h3>
-                <p class="desc">Daily essential fresh milk</p>
-                <div class="action-row">
-                    <select id="qty-toned">
-                        <option value="500ml">500ml - ₹28</option>
-                        <option value="1L">1L - ₹54</option>
-                    </select>
-                    <button class="add-btn" onclick="addToCart('Toned Milk', 'qty-toned')">+</button>
-                </div>
-            </div>
-
-            <div class="product-card">
-                <div class="tag">27% Whey Added</div>
-                <h3>Protein Milk</h3>
-                <p class="desc">For your daily fitness goals</p>
-                <div class="action-row">
-                    <select id="qty-protein">
-                        <option value="500ml">500ml - ₹40</option>
-                        <option value="1L">1L - ₹75</option>
-                    </select>
-                    <button class="add-btn" onclick="addToCart('Protein Milk', 'qty-protein')">+</button>
-                </div>
-            </div>
-
-            <div class="product-card">
-                <div class="tag gold">Premium</div>
-                <h3>Tanisha White Gold Milk</h3>
-                <p class="desc">Rich, creamy, and luxurious</p>
-                <div class="action-row">
-                    <select id="qty-tanisha">
-                        <option value="500ml">500ml - ₹45</option>
-                        <option value="1L">1L - ₹85</option>
-                    </select>
-                    <button class="add-btn" onclick="addToCart('Tanisha White Gold', 'qty-tanisha')">+</button>
-                </div>
-            </div>
-
-            <div class="product-card">
-                <div class="tag sweet">No Sugar</div>
-                <h3>Moo Kool</h3>
-                <p class="desc">Sweet milk for kids & adults</p>
-                <div class="action-row">
-                    <select id="qty-mookool">
-                        <option value="200ml">200ml - ₹25</option>
-                    </select>
-                    <button class="add-btn" onclick="addToCart('Moo Kool', 'qty-mookool')">+</button>
-                </div>
-            </div>
+        <!-- Glassy Navigation Bar -->
+        <div class="glass-nav">
+            <button id="tab-all" onclick="renderCategory('all')">All</button>
+            <button id="tab-milk" onclick="renderCategory('milk')">Milk</button>
+            <button id="tab-paneer" onclick="renderCategory('paneer')">Paneer</button>
+            <button id="tab-dahi" onclick="renderCategory('dahi')">Dahi</button>
+            <button id="tab-ghee" onclick="renderCategory('ghee')">Ghee</button>
         </div>
 
-        <!-- PANEER CATEGORY -->
-        <h2 id="paneer-cat" class="category-title">Soft Paneer</h2>
-        <div class="product-grid">
-            <div class="product-card">
-                <h3>Farm Fresh Moo Paneer</h3>
-                <p class="desc">Soft, rich, and melts in mouth</p>
-                <div class="action-row">
-                    <select id="qty-paneer">
-                        <option value="250g">250g - ₹90</option>
-                        <option value="500g">500g - ₹175</option>
-                    </select>
-                    <button class="add-btn" onclick="addToCart('Farm Fresh Moo Paneer', 'qty-paneer')">+</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- DAHI & GHEE CATEGORY -->
-        <h2 id="dahi-cat" class="category-title">Dahi & Ghee</h2>
-        <div class="product-grid">
-            <div class="product-card">
-                <h3>Moo Dahi</h3>
-                <p class="desc">Thick, creamy, set perfectly</p>
-                <div class="action-row">
-                    <select id="qty-dahi">
-                        <option value="200g">200g - ₹30</option>
-                        <option value="400g">400g - ₹55</option>
-                    </select>
-                    <button class="add-btn" onclick="addToCart('Moo Dahi', 'qty-dahi')">+</button>
-                </div>
-            </div>
+        <div class="products-container">
+            <h2 class="page-title" id="category-title">All Products</h2>
             
-            <div id="ghee-cat" class="product-card">
-                <h3>Pure Cow Ghee</h3>
-                <p class="desc">Aromatic traditional ghee</p>
-                <div class="action-row">
-                    <select id="qty-ghee">
-                        <option value="500ml">500ml - ₹350</option>
-                        <option value="1L">1L - ₹680</option>
-                    </select>
-                    <button class="add-btn" onclick="addToCart('Pure Cow Ghee', 'qty-ghee')">+</button>
-                </div>
-            </div>
+            <div class="product-grid" id="product-injection-zone"></div>
         </div>
-    </main>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- PERSISTENT OVERLAYS & MODALS               -->
+    <!-- ========================================== -->
+    <div class="overlay" id="app-overlay" onclick="closeModals()"></div>
 
     <!-- Wallet Modal -->
-    <div class="overlay" id="wallet-overlay" onclick="toggleWallet()"></div>
-    <div class="modal" id="wallet-modal">
-        <h3>Moo Wallet</h3>
-        <p class="wallet-bal">Balance: <span id="modal-wallet-display">₹0</span></p>
-        <p class="small-text">Add money instantly via UPI</p>
-        <div class="fund-buttons">
-            <button onclick="addFunds(100)">+ ₹100 (PhonePe/GPay)</button>
-            <button onclick="addFunds(500)">+ ₹500 (PhonePe/GPay)</button>
-            <button onclick="addFunds(1000)">+ ₹1000 (PhonePe/GPay)</button>
-        </div>
-        <button class="close-btn" onclick="toggleWallet()">Close</button>
+    <div class="wallet-modal" id="wallet-modal">
+        <h2>My Moo Wallet</h2>
+        <div class="wallet-bal" id="modal-wallet-bal">₹0</div>
+        <p style="color:var(--text-gray); font-size:0.9rem; margin-bottom:20px;">Top up instantly via PhonePe / GPay</p>
+        <button class="fund-btn" onclick="addMoney(100)">+ ₹100</button>
+        <button class="fund-btn" onclick="addMoney(500)">+ ₹500</button>
+        <button class="fund-btn" onclick="addMoney(1000)">+ ₹1000</button>
+        <button onclick="closeModals()" style="background:none; border:none; color:gray; cursor:pointer; margin-top:10px; font-weight:bold; padding: 10px;">Close Window</button>
     </div>
 
-    <!-- Cart / Subscription Sidebar -->
-    <div class="overlay" id="cart-overlay" onclick="toggleCart()"></div>
-    <div class="sidebar" id="cart-sidebar">
-        <div class="sidebar-header">
-            <h2>Your Subscription</h2>
-            <button class="close-btn-icon" onclick="toggleCart()">×</button>
+    <!-- Cart Sidebar -->
+    <div class="cart-sidebar" id="cart-sidebar">
+        <div class="cart-header">
+            <h2 style="color:var(--primary);">Subscription</h2>
+            <button onclick="closeModals()" style="background:none; border:none; font-size:2rem; cursor:pointer; color:#EF4444; line-height: 1;">&times;</button>
         </div>
-        
-        <div class="cart-items" id="cart-items-container">
-            <!-- Items inject here -->
-            <p class="empty-cart">Your cart is empty.</p>
+        <div class="cart-items" id="cart-items">
+            <p style="text-align:center; color:var(--text-gray); margin-top:20px;">Your cart is empty.</p>
         </div>
-
-        <div class="subscription-form">
-            <label>Delivery Frequency:</label>
+        <div class="checkout-section">
+            <label>Delivery Frequency</label>
             <select id="sub-freq">
-                <option value="Everyday">Everyday</option>
-                <option value="Alternate Days">Alternate Days</option>
-                <option value="Weekends Only">Weekends Only</option>
+                <option>Everyday Delivery</option>
+                <option>Alternate Days</option>
+                <option>Weekends Only</option>
             </select>
             
-            <label>Delivery Address:</label>
-            <textarea id="address" placeholder="Enter full address..."></textarea>
-        </div>
-
-        <div class="checkout-area">
-            <div class="total-row">
-                <span>Subtotal:</span>
-                <span id="cart-total">₹0</span>
+            <label>Delivery Address</label>
+            <textarea id="address" placeholder="Enter full address in Bhubaneswar..."></textarea>
+            
+            <div class="total-display">
+                <span>Total:</span>
+                <span id="cart-total-txt">₹0</span>
             </div>
-            <button class="checkout-btn" onclick="processOrder()">Subscribe & Pay</button>
+            <button class="btn-pay" onclick="processCheckout()">Subscribe & Pay</button>
         </div>
     </div>
 
-    <script src="script.js"></script>
+    <!-- PERSISTENT FOOTER -->
+    <footer id="footer-loc">
+        <div class="footer-grid">
+            <div class="footer-info">
+                <h3>Nayak Family Joint Venture</h3>
+                <p>Started in 2026 with a vision to bring pure, unadulterated dairy straight from the farm to every home in Odisha.</p>
+                <p><strong>Location:</strong> Lumbini Vihar, Bhubaneswar, Odisha 751021</p>
+            </div>
+            <div>
+                <iframe 
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3741.076891395565!2d85.8346049!3d20.3384214!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a19096a60395669%3A0xc3c54c33c37554f!2sLumbini%20Vihar%2C%20Chandrasekharpur%2C%20Bhubaneswar%2C%20Odisha%20751021!5e0!3m2!1sen!2sin!4v1710000000000!5m2!1sen!2sin" 
+                    width="100%" height="200" style="border:0; border-radius:15px;" allowfullscreen="" loading="lazy">
+                </iframe>
+            </div>
+        </div>
+        <div class="footer-bottom">&copy; 2026 Moo Fresh. All Rights Reserved.</div>
+    </footer>
+
+    <!-- ========================================== -->
+    <!-- JAVASCRIPT APPLICATION LOGIC               -->
+    <!-- ========================================== -->
+    <script>
+        // --- 1. PRODUCT DATABASE ---
+        const productsDB = [
+            { id: 1, category: 'milk', tag: 'Classic', name: 'Toned Milk', desc: 'Everyday essential fresh pasteurised milk.', img: 'milk.png', options: [{size:'500ml', price:28}, {size:'1L', price:54}] },
+            { id: 2, category: 'milk', tag: '27% Whey', name: 'Protein Milk', desc: 'Fuel your body with extra protein for fitness.', img: 'milk.png', options: [{size:'500ml', price:45}, {size:'1L', price:85}] },
+            { id: 3, category: 'milk', tag: 'Premium', name: 'Tanisha White Gold', desc: 'Rich, thick, and luxurious full cream milk.', img: 'goldmilk.png', options: [{size:'500ml', price:35}, {size:'1L', price:68}] },
+            { id: 4, category: 'milk', tag: 'No Sugar', name: 'Moo Kool', desc: 'A sweet treat for kids and everyday adults.', img: 'mookool.png', options: [{size:'200ml', price:25}] },
+            { id: 5, category: 'paneer', tag: 'Farm Fresh', name: 'Farm Fresh Moo Paneer', desc: 'Handcrafted soft paneer that melts in your mouth.', img: 'panner.png', options: [{size:'250g', price:90}, {size:'500g', price:175}] },
+            { id: 6, category: 'dahi', tag: 'Probiotic', name: 'Moo Dahi', desc: 'Thick, creamy, and set perfectly just like home.', img: 'dahi.png', options: [{size:'200g', price:30}, {size:'400g', price:55}] },
+            { id: 7, category: 'ghee', tag: 'Pure Cow', name: 'Pure Cow Ghee', desc: 'Traditional, aromatic, and rich in nutrients.', img: 'ghee.png', options: [{size:'500ml', price:350}, {size:'1L', price:680}] }
+        ];
+
+        // --- 2. GLOBAL STATE ---
+        let walletBalance = 0;
+        let cart = [];
+
+        // --- 3. SPA ROUTING SYSTEM ---
+        function navigateTo(pageId, category = 'all') {
+            document.querySelectorAll('.page-view').forEach(page => page.classList.remove('active'));
+            document.getElementById(`view-${pageId}`).classList.add('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            if (pageId === 'products') {
+                renderCategory(category);
+            }
+        }
+
+        // Smooth scroll routing for sections on Home page
+        function scrollToSection(sectionId) {
+            const isHomePage = document.getElementById('view-home').classList.contains('active');
+            
+            if (!isHomePage && sectionId !== 'footer-loc') {
+                navigateTo('home');
+                setTimeout(() => {
+                    document.getElementById(sectionId).scrollIntoView({ behavior: 'smooth' });
+                }, 100);
+            } else {
+                document.getElementById(sectionId).scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        // --- 4. DYNAMIC PRODUCT RENDERING ---
+        function renderCategory(cat) {
+            document.querySelectorAll('.glass-nav button').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(`tab-${cat}`).classList.add('active');
+
+            const titles = { 'all': 'Explore Everything', 'milk': 'Fresh Milk Range', 'paneer': 'Soft Paneer', 'dahi': 'Thick Dahi', 'ghee': 'Pure Ghee' };
+            document.getElementById('category-title').innerText = titles[cat];
+
+            const filtered = cat === 'all' ? productsDB : productsDB.filter(p => p.category === cat);
+            const container = document.getElementById('product-injection-zone');
+            container.innerHTML = ''; 
+
+            filtered.forEach(prod => {
+                let optionsHTML = '';
+                prod.options.forEach((opt, idx) => {
+                    optionsHTML += `<option value="${idx}">${opt.size} - ₹${opt.price}</option>`;
+                });
+
+                const html = `
+                    <div class="product-card">
+                        <div class="tag">${prod.tag}</div>
+                        <img src="${prod.img}" alt="${prod.name}" onerror="this.src='https://placehold.co/300x200/F1F5F9/1E3A8A?text=Image'">
+                        <h3>${prod.name}</h3>
+                        <p class="desc">${prod.desc}</p>
+                        <div class="action-row">
+                            <select id="select-${prod.id}">${optionsHTML}</select>
+                            <button class="add-btn" onclick="addToCart(${prod.id}, this)">+</button>
+                        </div>
+                    </div>
+                `;
+                container.innerHTML += html;
+            });
+        }
+
+        // --- 5. CART LOGIC ---
+        function addToCart(productId, btnElement) {
+            const product = productsDB.find(p => p.id === productId);
+            const selectElement = document.getElementById(`select-${productId}`);
+            const selectedIndex = selectElement.value;
+            const chosenOption = product.options[selectedIndex];
+
+            cart.push({
+                name: product.name,
+                size: chosenOption.size,
+                price: chosenOption.price
+            });
+
+            updateCartUI();
+
+            btnElement.innerHTML = "✓";
+            btnElement.style.background = "#10B981";
+            setTimeout(() => {
+                btnElement.innerHTML = "+";
+                btnElement.style.background = "var(--primary)";
+            }, 800);
+        }
+
+        function updateCartUI() {
+            document.getElementById('cart-badge').innerText = cart.length;
+            const list = document.getElementById('cart-items');
+            
+            if (cart.length === 0) {
+                list.innerHTML = '<p style="text-align:center; color:gray; margin-top:20px;">Your cart is empty.</p>';
+                document.getElementById('cart-total-txt').innerText = "₹0";
+                return;
+            }
+
+            let total = 0;
+            list.innerHTML = '';
+            
+            cart.forEach((item) => {
+                total += item.price;
+                list.innerHTML += `
+                    <div class="cart-item">
+                        <div>
+                            <strong style="color:var(--primary); font-size: 0.95rem;">${item.name}</strong><br>
+                            <small style="color:var(--text-gray);">${item.size}</small>
+                        </div>
+                        <div style="font-weight:800; font-size:1.05rem;">₹${item.price}</div>
+                    </div>
+                `;
+            });
+
+            document.getElementById('cart-total-txt').innerText = `₹${total}`;
+        }
+
+        function processCheckout() {
+            if (cart.length === 0) return alert("Please add items to your cart.");
+            
+            const total = cart.reduce((sum, item) => sum + item.price, 0);
+            const address = document.getElementById('address').value.trim();
+
+            if (!address) return alert("Please enter your delivery address.");
+
+            if (walletBalance < total) {
+                alert(`INSUFFICIENT FUNDS!\nOrder Total: ₹${total}\nWallet Balance: ₹${walletBalance}\n\nPlease top up your wallet.`);
+                closeModals();
+                setTimeout(toggleWallet, 500); 
+            } else {
+                walletBalance -= total;
+                cart = [];
+                document.getElementById('address').value = '';
+                updateCartUI();
+                updateWalletUI();
+                alert("PAYMENT SUCCESSFUL! 🎉\nYour milk subscription will begin immediately.");
+                closeModals();
+            }
+        }
+
+        // --- 6. WALLET LOGIC ---
+        function addMoney(amt) {
+            walletBalance += amt;
+            updateWalletUI();
+            alert(`₹${amt} added successfully via UPI!`);
+        }
+
+        function updateWalletUI() {
+            document.getElementById('wallet-btn-txt').innerText = `₹${walletBalance}`;
+            document.getElementById('modal-wallet-bal').innerText = `₹${walletBalance}`;
+        }
+
+        // --- 7. MODAL UI CONTROLS ---
+        function toggleWallet() {
+            document.getElementById('app-overlay').style.display = 'block';
+            document.getElementById('wallet-modal').style.display = 'block';
+        }
+
+        function toggleCart() {
+            document.getElementById('app-overlay').style.display = 'block';
+            document.getElementById('cart-sidebar').classList.add('open');
+        }
+
+        function closeModals() {
+            document.getElementById('app-overlay').style.display = 'none';
+            document.getElementById('wallet-modal').style.display = 'none';
+            document.getElementById('cart-sidebar').classList.remove('open');
+        }
+    </script>
 </body>
 </html>
